@@ -1,0 +1,111 @@
+"use client";
+
+import Image from "next/image";
+import type { CSSProperties } from "react";
+import { useMemo, useState } from "react";
+import { assets, mapFilters, mapPins, sections, type MapCategory, type MapPin } from "@/src/data/candidate";
+import { assetPath } from "@/src/data/paths";
+import { NaverMap } from "@/components/NaverMap";
+import { SectionHeading } from "@/components/SectionHeading";
+
+function PinDetail({ pin }: { pin: MapPin }) {
+  return (
+    <article className="civic-card p-5 shadow-civic" data-reveal>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="rounded-full bg-dem-blue px-3 py-1 text-xs font-black text-white">{pin.category}</span>
+        <span className="rounded-full bg-dem-pale px-3 py-1 text-xs font-black text-dem-blue">{pin.status}</span>
+      </div>
+      <h3 className="mt-4 text-xl font-black leading-7 text-ink">{pin.title}</h3>
+      <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <div>
+          <dt className="font-black text-slate-500">지역</dt>
+          <dd className="mt-1 font-bold text-ink">{pin.district}</dd>
+        </div>
+        <div>
+          <dt className="font-black text-slate-500">좌표</dt>
+          <dd className="mt-1 font-bold text-ink">
+            {pin.lat.toFixed(4)}, {pin.lng.toFixed(4)}
+          </dd>
+        </div>
+      </dl>
+      <p className="mt-4 text-sm font-bold leading-6 text-slate-600">{pin.summary}</p>
+    </article>
+  );
+}
+
+export function MapSection() {
+  const [filter, setFilter] = useState<(typeof mapFilters)[number]>("전체");
+  const [selectedId, setSelectedId] = useState(mapPins[0]?.id ?? "");
+
+  const filteredPins = useMemo(() => {
+    if (filter === "전체") return mapPins;
+    return mapPins.filter((pin) => pin.category === filter);
+  }, [filter]);
+
+  const selectedPin = filteredPins.find((pin) => pin.id === selectedId) ?? filteredPins[0] ?? mapPins[0];
+
+  function updateFilter(nextFilter: (typeof mapFilters)[number]) {
+    setFilter(nextFilter);
+    const nextPin = nextFilter === "전체" ? mapPins[0] : mapPins.find((pin) => pin.category === (nextFilter as MapCategory));
+    if (nextPin) setSelectedId(nextPin.id);
+  }
+
+  return (
+    <section id="map" className="civic-section bg-[linear-gradient(180deg,#ffffff_0%,#eef7ff_100%)]">
+      <div className="section-shell">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeading
+            eyebrow="Communication Map"
+            title={sections.mapTitle}
+            description={sections.mapDescription}
+          />
+          <p className="rounded-lg border border-dem-blue/20 bg-white p-5 text-sm font-black leading-6 text-dem-blue shadow-civic-soft" data-reveal style={{ "--index": 1 } as CSSProperties & Record<"--index", number>}>
+            {sections.mapNote}
+          </p>
+        </div>
+
+        <div className="relative mt-10 min-h-[250px] overflow-hidden rounded-lg border border-white bg-dem-pale shadow-civic md:min-h-[360px]" data-reveal style={{ "--index": 2 } as CSSProperties & Record<"--index", number>}>
+          <Image
+            src={assetPath(assets.mapVisual)}
+            alt="지역 소통지도 대표 이미지"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+
+        <div className="mt-8 flex gap-2 overflow-x-auto pb-2" aria-label="지도 핀 필터" data-reveal style={{ "--index": 3 } as CSSProperties & Record<"--index", number>}>
+          {mapFilters.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => updateFilter(item)}
+              className={
+                filter === item
+                  ? "min-h-10 shrink-0 rounded-full bg-dem-blue px-4 text-sm font-black text-white shadow-[0_10px_24px_rgba(0,78,162,0.18)] focus:outline-none focus:ring-2 focus:ring-dem-blue focus:ring-offset-2"
+                  : "min-h-10 shrink-0 rounded-full border border-slate-300 bg-white px-4 text-sm font-black text-slate-700 transition duration-500 hover:border-dem-blue hover:text-dem-blue focus:outline-none focus:ring-2 focus:ring-dem-blue focus:ring-offset-2"
+              }
+              aria-pressed={filter === item}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-7 grid gap-5 lg:grid-cols-[1.35fr_0.65fr]" data-reveal style={{ "--index": 4 } as CSSProperties & Record<"--index", number>}>
+          <NaverMap pins={filteredPins} selectedPin={selectedPin} onSelectPin={setSelectedId} />
+
+          <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start" aria-label="선택한 지도 핀 상세">
+            {selectedPin ? <PinDetail pin={selectedPin} /> : null}
+            <div className="civic-card mt-4 p-5">
+              <h3 className="text-base font-black text-ink">{sections.mapGuideTitle}</h3>
+              <p className="mt-3 text-sm font-bold leading-6 text-slate-600">
+                {sections.mapGuideDescription}
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}

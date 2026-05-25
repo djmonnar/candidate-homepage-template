@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>후보자 홈페이지 템플릿 사용 설명서</title>
+    <style>
+      body {
+        margin: 0;
+        color: #071f3f;
+        background: #f6fbff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.7;
+      }
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 48px 20px 72px;
+      }
+      h1,
+      h2 {
+        line-height: 1.25;
+      }
+      h1 {
+        font-size: clamp(32px, 6vw, 52px);
+      }
+      h2 {
+        margin-top: 36px;
+        font-size: 24px;
+      }
+      code {
+        border-radius: 6px;
+        background: #eaf5ff;
+        padding: 2px 6px;
+        font-weight: 700;
+      }
+      .panel {
+        border: 1px solid #d8e8f8;
+        border-radius: 8px;
+        background: #ffffff;
+        padding: 22px;
+        box-shadow: 0 16px 46px rgba(0, 43, 94, 0.08);
+      }
+      li + li {
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><strong>Candidate Homepage Template</strong></p>
+      <h1>후보 정보만 넣으면 바로 쓰는 홈페이지 템플릿</h1>
+      <div class="panel">
+        <p>
+          새 후보 사이트를 만들 때는 <code>src/data/candidate.ts</code>를 먼저 수정하세요.
+          후보명, 정당명, 지역구, 약력, 공약, 지도 핀, SNS 링크가 한곳에 모여 있습니다.
+        </p>
+      </div>
+
+      <h2>필수 수정 항목</h2>
+      <ul>
+        <li><code>site</code>: 후보명, 정당, 선거구, 슬로건, 도메인</li>
+        <li><code>profile</code>: 소개 문구, 학력, 경력, 공개자료 안내</li>
+        <li><code>policies</code>: 공약 제목, 분야, 요약, 추진 방향, 영상 링크</li>
+        <li><code>district</code>: 지역 인구, 세대, 면적, 행정동 정보</li>
+        <li><code>mapCenter</code>, <code>mapPins</code>: 지도 중심 좌표와 핀</li>
+        <li><code>assets</code>: 히어로 이미지, 공유 이미지, 정당 로고 경로</li>
+      </ul>
+
+      <h2>이미지 교체</h2>
+      <p>
+        이미지는 <code>public/images/</code>에 넣고, 파일명이 다르면
+        <code>assets</code>의 경로를 함께 바꿉니다.
+      </p>
+
+      <h2>배포</h2>
+      <p>
+        수정 후 <code>npm run build</code>가 성공하면 <code>main</code> 브랜치에 반영하세요.
+        GitHub Actions가 정적 사이트를 빌드해 GitHub Pages에 배포합니다.
+      </p>
+    </main>
+  </body>
+</html>
