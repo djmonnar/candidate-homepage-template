@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { assets, menuLinks, site } from "@/src/data/candidate";
-import { assetPath } from "@/src/data/paths";
+import { assetPath, routePath } from "@/src/data/paths";
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +14,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-3 z-50 px-3">
       <div className="mx-auto flex h-[68px] w-full max-w-4xl items-center justify-between gap-4 rounded-full border border-white/70 bg-white/[0.88] px-5 shadow-[0_18px_55px_rgba(0,43,94,0.13)] ring-1 ring-dem-blue/5 backdrop-blur-xl sm:px-6">
-        <a href="/#top" onClick={closeMenu} className="group flex min-w-0 items-center gap-3" aria-label={`${site.name} 홈페이지 처음으로`}>
+        <a href={routePath("/#top")} onClick={closeMenu} className="group flex min-w-0 items-center gap-3" aria-label={`${site.name} 홈페이지 처음으로`}>
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-dem-blue text-lg font-black text-white shadow-[0_10px_26px_rgba(0,78,162,0.22)] transition duration-500 group-hover:scale-[1.04]">
             {site.ballotBadge}
           </span>
@@ -49,7 +49,7 @@ export function SiteHeader() {
           {menuLinks.map((link) => (
             <a
               key={link.href}
-              href={link.href}
+              href={routePath(link.href)}
               onClick={closeMenu}
               className="group flex min-h-16 items-center justify-between gap-4 rounded-lg bg-slate-50 px-4 transition duration-500 hover:bg-dem-blue hover:text-white"
             >
