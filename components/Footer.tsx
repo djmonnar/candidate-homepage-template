@@ -1,5 +1,5 @@
 import { assets, menuLinks, site } from "@/src/data/candidate";
-import { assetPath } from "@/src/data/paths";
+import { assetPath, routePath } from "@/src/data/paths";
 
 export function Footer() {
   return (
@@ -24,11 +24,11 @@ export function Footer() {
 
           <nav className="flex flex-wrap gap-4 text-sm font-black text-slate-600 md:justify-end" aria-label="하단 메뉴">
             {menuLinks.map((link) => (
-              <a key={link.href} href={link.href} className="transition hover:text-dem-blue">
+              <a key={link.href} href={routePath(link.href)} className="transition hover:text-dem-blue">
                 {link.label}
               </a>
             ))}
-            <a href="/contact/" className="transition hover:text-dem-blue">
+            <a href={routePath("/contact/")} className="transition hover:text-dem-blue">
               개인정보처리방침
             </a>
           </nav>
